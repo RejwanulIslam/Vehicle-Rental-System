@@ -1,6 +1,6 @@
 import express from "express"
 import { initDB } from "./config/DB";
-import router from "./modules/users.ts/user.route";
+import { userRouter } from "./modules/auth.ts/auth.route";
 const app = express()
 const port = 5000;
 app.use(express.json())
@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
 
 initDB()
 
-app.use('/user',router)
+app.use('/user',userRouter)
 
 
 
