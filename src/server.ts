@@ -2,6 +2,7 @@ import express from "express"
 import { initDB } from "./config/DB";
 import { authRouter } from "./modules/auth.ts/auth.route";
 import { userRouter } from "./modules/users/user.route";
+import { vehicleRouter } from "./modules/vehicles.ts/vehicles.route";
 
 const app = express()
 const port = 5000;
@@ -19,6 +20,9 @@ app.use('/auth',authRouter)
 
 // user
 app.use('/user',userRouter)
+
+// vehicle
+app.use('/vehicle',vehicleRouter)
 
 
 
