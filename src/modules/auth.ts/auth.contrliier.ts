@@ -1,9 +1,9 @@
 import { Request, Response } from "express"
-import { userService } from "./auth.service"
+import { authService } from "./auth.service"
 
 const creactUser = async (req: Request, res: Response) => {
     try {
-        const result = await userService.creactUSerBD(req.body)
+        const result = await authService.creactUSerBD(req.body)
         res.status(201).json({
             "success": true,
             "message": "User registered successfully",
@@ -22,7 +22,7 @@ const creactUser = async (req: Request, res: Response) => {
 
 const loginUser = async (req: Request, res: Response) => {
     try {
-        const result = await userService.loginUserBD(req.body)
+        const result = await authService.loginUserBD(req.body)
         res.status(201).json({
             "success": true,
             "message": "Login successful",
@@ -37,7 +37,7 @@ const loginUser = async (req: Request, res: Response) => {
     }
 }
 
-export const userContrliier = {
+export const authContrliier = {
     creactUser,
     loginUser,
 }

@@ -1,6 +1,8 @@
 import express from "express"
 import { initDB } from "./config/DB";
-import { userRouter } from "./modules/auth.ts/auth.route";
+import { authRouter } from "./modules/auth.ts/auth.route";
+import { userRouter } from "./modules/users/user.route";
+
 const app = express()
 const port = 5000;
 app.use(express.json())
@@ -12,8 +14,12 @@ app.get('/', (req, res) => {
 
 
 initDB()
+// auth 
+app.use('/auth',authRouter)
 
+// user
 app.use('/user',userRouter)
+
 
 
 

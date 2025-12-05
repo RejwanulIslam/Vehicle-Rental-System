@@ -1,10 +1,10 @@
 import { Router } from "express"
-import { userContrliier } from "./auth.contrliier"
+import { authContrliier } from "./auth.contrliier";
 
 
 const router=Router()
-router.post('/api/v1/auth/signup',userContrliier.creactUser)
-router.post('/api/v1/auth/signIn',userContrliier.loginUser)
+router.post('/api/v1/auth/signup',authContrliier.creactUser)
+router.post('/api/v1/auth/signIn',authContrliier.loginUser)
 
 
-export const userRouter= router;
+export const authRouter= router;

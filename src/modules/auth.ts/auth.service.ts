@@ -37,7 +37,7 @@ const loginUserBD = async (paylod: Record<string, any>) => {
     return { token, user };
 }
 
-export const userService = {
+export const authService = {
     creactUSerBD,
     loginUserBD,
 }
