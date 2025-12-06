@@ -1,13 +1,14 @@
 import { Request, Response } from "express"
-import { userService } from "./user.service"
+import { bookingService } from "./booking.service"
 
-const getAllUser = async (req: Request, res: Response) => {
+
+const addBooking = async (req: Request, res: Response) => {
     try {
-        const result = await userService.getAllUserDB()
-        res.status(200).json({
+        const result = await bookingService.addBookinglDB(req.body)
+        res.status(201).json({
             "success": true,
-            "message": "Users retrieved successfully",
-            "data": result.rows
+            "message": "booking successfully",
+            "data": result.rows[0]
         })
     } catch (error: any) {
         res.status(500).json({
@@ -19,24 +20,22 @@ const getAllUser = async (req: Request, res: Response) => {
 
 }
 
-
-const updateUser = async (req: Request, res: Response) => {
+const getBooking = async (req: Request, res: Response) => {
     try {
-        const result = await userService.updateUserDB(req.body, (req as any).user, req.params.id, res) as any
+        const result = await bookingService.getBoohingDB(req.body, (req as any).user) as any
         if (result.rows.length == 0) {
             res.status(404).json({
                 success: false,
-                message: 'user not found'
+                message: 'booking not found'
             })
         } else {
-            res.status(201).json({
+            res.status(200).json({
                 "success": true,
-                "message": "User updated successfully",
+                "message": "Bookings retrieved successfully",
                 "data": result.rows
             })
         }
 
-
     } catch (error: any) {
         res.status(500).json({
             "success": false,
@@ -46,18 +45,20 @@ const updateUser = async (req: Request, res: Response) => {
     }
 
 }
-const deleteUser = async (req: Request, res: Response) => {
+
+const updateBooking = async (req: Request, res: Response) => {
     try {
-        const result = await userService.deleteUserDB(req.params.id)
+        const result = await bookingService.updateBookingDB(req) as any
         if (result.rows.length == 0) {
             res.status(404).json({
                 success: false,
-                message: 'user not found'
+                message: 'booking not found'
             })
         } else {
             res.status(201).json({
                 "success": true,
-                "message": "User deleted successfully"
+                "message": "Booking cancelled successfully",
+                "data": result.rows[0]
             })
         }
 
@@ -71,10 +72,8 @@ const deleteUser = async (req: Request, res: Response) => {
 
 }
 
-
-
-export const userController = {
-    getAllUser,
-    updateUser,
-    deleteUser,
+export const bookingController = {
+    addBooking,
+    getBooking,
+    updateBooking
 }

@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { vehicleService } from "./vehicles.service"
 
-const addNewVehicle  = async (req: Request, res: Response) => {
+const addNewVehicle = async (req: Request, res: Response) => {
     try {
         const result = await vehicleService.creactVhicelDB(req.body)
         res.status(201).json({
@@ -18,12 +18,12 @@ const addNewVehicle  = async (req: Request, res: Response) => {
     }
 
 }
-const getAllVehicle  = async (req: Request, res: Response) => {
+const getAllVehicle = async (req: Request, res: Response) => {
     try {
         const result = await vehicleService.getalVhicelDB()
-        res.status(201).json({
+        res.status(200).json({
             "success": true,
-            "message": "get all veicel",
+            "message": "Vehicles retrieved successfully",
             "data": result.rows
         })
     } catch (error: any) {
@@ -35,14 +35,22 @@ const getAllVehicle  = async (req: Request, res: Response) => {
     }
 
 }
-const getSingleVehicle  = async (req: Request, res: Response) => {
+const getSingleVehicle = async (req: Request, res: Response) => {
     try {
         const result = await vehicleService.getSingleVhicelDB(req.params.id)
-        res.status(201).json({
-            "success": true,
-            "message": "update veicel",
-            "data": result.rows[0]
-        })
+        if (result.rows.length == 0) {
+            res.status(404).json({
+                success: false,
+                message: 'Vehicle not found'
+            })
+        }
+        else {
+            res.status(200).json({
+                "success": true,
+                "message": "Vehicle retrieved successfully",
+                "data": result.rows[0]
+            })
+        }
     } catch (error: any) {
         res.status(500).json({
             "success": false,
@@ -52,14 +60,22 @@ const getSingleVehicle  = async (req: Request, res: Response) => {
     }
 
 }
-const updateVehicle  = async (req: Request, res: Response) => {
+const updateVehicle = async (req: Request, res: Response) => {
     try {
         const result = await vehicleService.updateVhicelDB(req)
-        res.status(201).json({
-            "success": true,
-            "message": "get single veicel",
-            "data": result.rows[0]
-        })
+        if (result.rows.length == 0) {
+            res.status(404).json({
+                success: false,
+                message: 'Vehicle not found'
+            })
+        } else {
+            res.status(200).json({
+                "success": true,
+                "message": "Vehicle updated successfully",
+                "data": result.rows[0]
+            })
+        }
+
     } catch (error: any) {
         res.status(500).json({
             "success": false,
@@ -69,14 +85,23 @@ const updateVehicle  = async (req: Request, res: Response) => {
     }
 
 }
-const deleteVehicle  = async (req: Request, res: Response) => {
+const deleteVehicle = async (req: Request, res: Response) => {
+
     try {
         const result = await vehicleService.deleteVhicelDB(req.params.id)
-        res.status(201).json({
-            "success": true,
-            "message": "delete veicel",
-            
-        })
+        if (result.rows.length == 0) {
+            res.status(404).json({
+                success: false,
+                message: 'Vehicle not found'
+            })
+        } else {
+            res.status(200).json({
+                "success": true,
+                "message": "Vehicle deleted successfully"
+
+            })
+        }
+
     } catch (error: any) {
         res.status(500).json({
             "success": false,

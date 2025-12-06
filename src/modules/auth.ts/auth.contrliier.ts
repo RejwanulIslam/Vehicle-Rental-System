@@ -23,11 +23,20 @@ const creactUser = async (req: Request, res: Response) => {
 const loginUser = async (req: Request, res: Response) => {
     try {
         const result = await authService.loginUserBD(req.body)
-        res.status(201).json({
-            "success": true,
-            "message": "Login successful",
-            "data": result
-        })
+        if (!result) {
+            res.status(404).json({
+                success: false,
+                message: 'User not found'
+            })
+        } else {
+            res.status(201).json({
+                "success": true,
+                "message": "Login successful",
+                "data": result
+            })
+        }
+
+
     } catch (error: any) {
         res.status(500).json({
             "success": false,

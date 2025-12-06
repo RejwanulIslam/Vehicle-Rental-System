@@ -1,7 +1,8 @@
 import { Pool } from "pg"
+import config from "."
 
 export const pool = new Pool({
-    connectionString: 'postgresql://neondb_owner:npg_pMYN4i8nLjDq@ep-purple-dust-a8e43smu-pooler.eastus2.azure.neon.tech/neondb?sslmode=require&channel_binding=require'
+    connectionString: `${config.CONNECTIONSTRING}`
 })
 
 export const initDB = async () => {
@@ -25,5 +26,25 @@ export const initDB = async () => {
         availability_status	 VARCHAR(60) NOT NULL CHECK (availability_status IN('available','booked'))
         
         )
+         `)
+
+    await pool.query(`
+                         CREATE TABLE IF NOT EXISTS bookings(
+                         id SERIAL PRIMARY KEY,
+                         customer_id INT REFERENCES users(id) ON DELETE CASCADE,
+                         vehicle_id INT REFERENCES vehicles(id) ON DELETE CASCADE,
+
+
+                         rent_start_date DATE NOT NULL,
+                         rent_end_date DATE NOT NULL ,
+                          CHECK (rent_start_date < rent_end_date),
+
+                         total_price NUMERIC NOT NULL CHECK (total_price > 0),
+
+                         status VARCHAR(50) CHECK (status IN('active', 'cancelled', 'returned')) DEFAULT 'active' 
+
+
+                         )
+
             `)
 }
