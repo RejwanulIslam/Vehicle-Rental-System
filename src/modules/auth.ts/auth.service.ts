@@ -9,7 +9,7 @@ const creactUSerBD = async (paylod: Record<string, any>) => {
 
     const hasspass = await bcrypt.hash(password as string, 10)
 
-    const result = await pool.query(`INSERT INTO users(name, email, password, phone, role) VALUES($1,$2,$3,$4,$5) RETURNING*`,
+    const result = await pool.query(`INSERT INTO users(name, email, password, phone, role) VALUES($1,$2,$3,$4,$5) RETURNING id, name, email, phone, role`,
         [name, email, hasspass, phone, role])
     return result;
 }
@@ -22,8 +22,8 @@ const loginUserBD = async (paylod: Record<string, any>) => {
     if (result.rows.length === 0) {
         return null
     }
-    const user = result.rows[0]
-    
+    let user = result.rows[0]
+
     const match = await bcrypt.compare(password, user.password)
     if (!match) {
         return false
@@ -34,6 +34,7 @@ const loginUserBD = async (paylod: Record<string, any>) => {
         expiresIn: '30d'
     })
 
+    user = (await pool.query(`SELECT id, name, email, phone, role FROM users WHERE email =$1`, [email])).rows[0]
 
     return { token, user };
 }

@@ -1,15 +1,19 @@
+import { Response } from "express";
 import { pool } from "../../config/DB";
 
 
 
 
-const addBookinglDB = async (paylod: Record<string, any>) => {
+const addBookinglDB = async (paylod: Record<string, any>,res:Response) => {
     const { customer_id, vehicle_id, rent_start_date, rent_end_date } = paylod;
 
     const startDate: Date = new Date(rent_start_date)
     const endDate: Date = new Date(rent_end_date)
     if (new Date(rent_end_date) <= new Date(rent_start_date)) {
-        throw new Error("rent_end_date must be after rent_start_date");
+        res.status(400).json({
+            success:false,
+            message:"rent_end_date must be after rent_start_date"
+        })
     }
     const totalDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
 
@@ -28,10 +32,32 @@ const addBookinglDB = async (paylod: Record<string, any>) => {
 }
 
 
-const getBoohingDB = async (paylod: Record<string, unknown>,user:Record<string, any>) => {
+const getBoohingDB = async (paylod: Record<string, unknown>, user: Record<string, any>) => {
     console.log('bokinbhhhhhh', user)
     let booking
 
+    if (user.role == 'admin') {
+        booking = await pool.query(`SELECT * FROM bookings*`)
+    }
+
+    if (user.role !== 'admin') {
+        booking = await pool.query(`SELECT * FROM bookings WHERE customer_id=$1`, [user.id])
+
+    }
+
+
+    const today = new Date()
+    for (const book of (booking as any).rows) {
+        const endDate = new Date(book.rent_end_date)
+        if (endDate < today && book.status == 'booked'){
+         await pool.query(`UPDATE bookings SET status=$1 WHERE id=$2`, ['returned', book.id])
+
+        //  vaicel update
+         await pool.query(`UPDATE vehicles SET availability_status=$1 WHERE id=$2`, ['available', book.vehicle_id])
+        }
+    }
+
+    
     if (user.role == 'admin') {
         booking = await pool.query(`SELECT * FROM bookings*`)
     }

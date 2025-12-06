@@ -11,7 +11,7 @@ const updateUserDB = async (data: Record<string, unknown>, user: any, id: any, r
     const { name, email, phone, role } = data
     let result
     if (user.role == 'admin') {
-        result = await pool.query(`UPDATE users SET name=$1, email=$2, phone=$3, role=$4 WHERE id=$5 RETURNING*`, [name, email, phone, role, id])
+        result = await pool.query(`UPDATE users SET name=$1, email=$2, phone=$3, role=$4 WHERE id=$5 RETURNING id, name, email, phone, role`, [name, email, phone, role, id])
     }
 
     if (user.role !== 'admin' && user.id !== id) {
