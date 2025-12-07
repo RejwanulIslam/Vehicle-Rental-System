@@ -24,6 +24,7 @@ const deleteVhicelDB = async (id: string | undefined, res: Response) => {
     const getalVhicel = await pool.query(`SELECT * FROM vehicles WHERE id=$1`, [id])
     if (getalVhicel.rows.length > 0 && getalVhicel.rows[0].availability_status == 'booked') {
         return res.status(400).json({
+            success:false,
             message: 'Cannot delete vehicle: It has active bookings'
         })
     }
