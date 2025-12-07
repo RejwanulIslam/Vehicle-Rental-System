@@ -37,7 +37,7 @@ const getBoohingDB = async (paylod: Record<string, unknown>, user: Record<string
     let booking
 
     if (user.role == 'admin') {
-        booking = await pool.query(`SELECT * FROM bookings*`)
+        booking = await pool.query(`SELECT * FROM bookings`)
     }
 
     if (user.role !== 'admin') {
