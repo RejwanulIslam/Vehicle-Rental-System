@@ -13,7 +13,7 @@ export const initDB = async () => {
         email VARCHAR(200) UNIQUE NOT NULL CHECK (email=LOWER(email)),
         password TEXT NOT NULL,
         phone VARCHAR(20) NOT NULL,
-        role VARCHAR(60)
+        role VARCHAR(100)
         )
         `)
     await pool.query(`
